@@ -5,6 +5,7 @@
 #include <fstream>
 #include <chrono>
 #include <numeric> // std::iota
+#include <algorithm>
 
 using namespace std;
 using namespace std::chrono;
@@ -74,8 +75,8 @@ int main()
 
 			std::iota(my_vector.begin(), my_vector.end(), 0); // iota는 0, 1, 2, ... , n-1 까지 순서대로 채워주는 함수
 			std::reverse(my_vector.begin(), my_vector.end()); // 최악의 경우를 만들기 위해 순서를 뒤집어주기
-			std::random_shuffle(my_vector.begin(), my_vector.begin() + r); // 일부만 순서를 바꿔줌 (shuffle은 딜러가 카드 섞는 것 생각하면 됩니다.)
-
+			// std::random_shuffle(my_vector.begin(), my_vector.begin() + r); // 일부만 순서를 바꿔줌 (shuffle은 딜러가 카드 섞는 것 생각하면 됩니다.)
+			std::shuffle(my_vector.begin(), my_vector.begin() + r, gen);
 			// Print(my_vector);
 
 			// Random case

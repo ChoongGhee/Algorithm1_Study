@@ -29,6 +29,9 @@ int main()
 	for (int i = 1; i < N; i++)
 	{
 		// TODO: 딱 2줄만 사용
+		for(int j = i; j > 0 && a[j-1] > a[j];j--){
+			swap(a[j-1], a[j]);
+		}
 
 		Print(a);
 	}
