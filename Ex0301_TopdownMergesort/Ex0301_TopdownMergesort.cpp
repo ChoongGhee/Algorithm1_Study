@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip> // setfill(), setw()
 #include <numeric> // iota
+#include <algorithm>
 
 using namespace std;
 
@@ -52,17 +53,21 @@ private:
 
 		for (int k = lo; k <= hi; k++)
 		{
-			//if (i > mid) TODO;
-			//else if (j > hi) TODO;
-			//else if (aux[j] < aux[i]) TODO;
-			//else a[k] = TODO;
+			if (i > mid)
+				a[k] = aux[j++]; 
+			else if (j > hi) 
+				a[k] = aux[i++];
+			else if (aux[j] < aux[i])
+				a[k] = aux[j++];
+			else 
+				a[k] = aux[i++];
 		}
 
 		cout << "After : ";
 		Print(a, lo, hi);
 
-		//count += hi - lo + 1;
-		//cout << "Count : " << hi - lo + 1 << ", " << count << endl; // 누적 카운트 (디버깅용)
+		count += hi - lo + 1;
+		cout << "Count : " << hi - lo + 1 << ", " << count << endl; // 누적 카운트 (디버깅용)
 	}
 
 	void SortHelper(vector<int>& a, int lo, int hi)
@@ -72,7 +77,10 @@ private:
 		int mid = lo + (hi - lo) / 2;
 
 		//TODO:
+		SortHelper(a, lo, mid);
 		//TODO:
+		SortHelper(a, mid+1, hi);
+	
 
 		Merge(a, lo, mid, hi);
 	}
