@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <numeric> // std::iota
+#include <algorithm>
 
 using namespace std;
 
@@ -37,12 +38,44 @@ public:
 
 		int N = a.size();
 		// TODO: 재귀호출 사용하지 않습니다.
+		for (int sz = 1; sz < N; sz = sz + sz)
+            for (int lo = 0; lo < N - sz; lo += 2*sz)
+                Merge(a, lo, lo + sz - 1, std::min(lo + sz + sz - 1, N - 1));
+
+		
 	}
 
 private:
 	void Merge(vector<int>& a, int lo, int mid, int hi)
 	{
 		// TODO: Top-down과 동일
+		cout << "Before: ";
+		Print(a, lo, hi);
+
+		int i = lo, j = mid + 1;
+		// 정렬이 이미되어 있다는 것을 확인
+		if(a[mid <= a[j]]) return;
+	
+		for (int k = lo; k <= hi; k++)
+			aux[k] = a[k];
+
+		for (int k = lo; k <= hi; k++)
+		{
+			if (i > mid)
+				a[k] = aux[j++]; 
+			else if (j > hi) 
+				a[k] = aux[i++];
+			else if (aux[j] < aux[i])
+				a[k] = aux[j++];
+			else 
+				a[k] = aux[i++];
+		}
+
+		cout << "After : ";
+		Print(a, lo, hi);
+
+		// count += hi - lo + 1;
+		// cout << "Count : " << hi - lo + 1 << ", " << count << endl; // 누적 카운트 (디버깅용)
 	}
 
 	vector<int> aux; // 추가 메모리

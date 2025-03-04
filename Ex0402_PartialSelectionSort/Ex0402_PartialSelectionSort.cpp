@@ -17,6 +17,14 @@ void Print(vector<int>& arr)
 void SelectionSortPass(vector<int>& arr, int lo, int hi)
 {
 	// TODO: 
+	int min_idx = lo;
+	for (int i = lo; i<hi ; i++){
+		if(arr[min_idx] > arr[i]){
+			min_idx = i;
+		}
+	}
+
+	swap(arr[min_idx], arr[lo]);
 }
 
 void PartialSelectionSort(vector<int>& arr, int k)
@@ -26,6 +34,7 @@ void PartialSelectionSort(vector<int>& arr, int k)
 	for (int i = 0; i < k; i++)
 	{
 		// SelectionSortPass( TODO: );
+		SelectionSortPass(arr, i, arr.size());
 
 		Print(arr);
 	}
