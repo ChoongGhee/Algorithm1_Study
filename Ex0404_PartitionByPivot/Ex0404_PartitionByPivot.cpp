@@ -11,10 +11,10 @@ void Print(vector<int>& arr)
 
 int main()
 {
-	vector<int> arr = { 5, 2, 7, 3, 8, 5, 6, 4 };
-	//vector<int> arr = { 2, 8, 7, 1, 3, 5, 6, 4 };
-	//vector<int> arr = { 9, 8, 7, 6, 4, 3, 2, 1, 5 };
-	//vector<int> arr = { 5, 2, 7, 3, 4, 4, 6, 4 };
+	// vector<int> arr = { 5, 2, 7, 3, 8, 5, 6, 4 };
+	// vector<int> arr = { 2, 8, 7, 1, 3, 5, 6, 4 };
+	// vector<int> arr = { 9, 8, 7, 6, 4, 3, 2, 1, 5 };
+	vector<int> arr = { 5, 2, 7, 3, 4, 4, 6, 4 };
 
 	int lo = 0;  // 첫 인덱스
 	int hi = arr.size() - 1;  // 마지막 인덱스
@@ -25,6 +25,9 @@ int main()
 	Print(arr);
 
 	// TODO:
+	for(int j = 0;j<hi;j++){
+		if(arr[j]<=x) swap(arr[j], arr[++i]);
+	}
 
 	swap(arr[i + 1], arr[hi]);
 	Print(arr);
