@@ -6,6 +6,9 @@
 #include <chrono>
 #include <numeric>
 #include <iomanip>
+
+#include <algorithm>
+
 using namespace std;
 using namespace std::chrono;
 
@@ -76,33 +79,38 @@ int RandomizedSelect(vector<int>& arr, int lo, int hi, int k)
 
 	int index = Partition(arr, lo, hi); // pivot index
 
-	//if (index - lo == k - 1) TODO;
-	//else if (k - 1 < index - lo) TODO;
-	//else TODO;
+	if (index - lo == k - 1) return arr[index];
+	// 실수 1 : index를 해당 범위에서의 갯수로 착각 > 전체 배열에서의 인덱스 값임
+	// 실수 2 else문에서 k의 값 조정할 때 index만 하도록 착각 > 이전 lo값을 고려해줘야함.
+	// 실수 3 index + 1을 k에 빼주는 이유는 k가 번째라서 index는 인덱스 값이라 2개를 빼줘야함. 
+	// else if (k - 1 < index - lo) return RandomizedSelect(arr, lo, hi - index, k -1);
+	// else return RandomizedSelect(arr, lo + index, hi, k -1 - index);
+	else if (k - 1 < index - lo) return RandomizedSelect(arr, lo, index - 1, k);
+	else return RandomizedSelect(arr, index + 1, hi, k - ( index + 1 ) + lo);
 
 	return -1; // 임시구현
 }
 
 int main()
 {
-	srand(1); // 랜덤 피벗을 사용할 때는 숫자를 바꿔가면서 테스트해보세요.
+	srand(2); // 랜덤 피벗을 사용할 때는 숫자를 바꿔가면서 테스트해보세요.
 
-	//vector<int> my_vector = { 6, 19, 4, 12, 14, 9, 15, 7, 8, 11, 3, 13, 2, 5, 10 };
-	//vector<int> my_vector = { 4, 19, 4, 12, 2, 9, 15, 2, 8, 11, 3, 1, 2, 1, 10 };
-	vector<int> my_vector = { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+	vector<int> my_vector = { 6, 19, 4, 12, 14, 9, 15, 7, 8, 11, 3, 13, 2, 5, 10 };
+	// vector<int> my_vector = { 4, 19, 4, 12, 2, 9, 15, 2, 8, 11, 3, 1, 2, 1, 10 };
+	// vector<int> my_vector = { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
 
 	Print(my_vector, 0, my_vector.size() - 1);
 
 	cout << RandomizedSelect(my_vector, 0, my_vector.size() - 1, std::ceil(my_vector.size() / 2.0)) << endl;
 	// 주의: k는 k번째를 의미, 인덱스는 0부터 시작하기 때문에 인덱스로는 k - 1 자리
 
-	return 0; // 아래 테스트 실행하려면 제거
+	// return 0; // 아래 테스트 실행하려면 제거
 
 	// 아래는 더 많은 경우에 대한 테스트
 	random_device rd;
 	mt19937 gen(rd());
 
-	for (int n = 1; n <= 10000; n += 1)
+	for (int n = 1; n <= 100; n += 1)
 	{
 		vector<int> my_vector(n);
 
@@ -131,4 +139,6 @@ int main()
 	}
 
 	cout << "Good!" << endl;
+
+	return 0;
 }
