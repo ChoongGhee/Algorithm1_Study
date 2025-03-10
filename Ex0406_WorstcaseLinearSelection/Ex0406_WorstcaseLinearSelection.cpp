@@ -6,6 +6,9 @@
 #include <chrono>
 #include <numeric>
 #include <iomanip>
+
+#include <algorithm>
+
 using namespace std;
 
 void Print(vector<int>& arr, int lo, int hi, string sep = "")
@@ -90,17 +93,26 @@ Pair Select(vector<int>& arr, int lo, int hi, int k)
 	PrintGroups(arr, lo, g);
 
 	//TODO: 각각의 그룹 정렬(힌트: stride 사용)
+	// 최적화 1 : 어차피 배열 모든 요소를 루프하기 때문에 lo ~ hi까지 적는게 클린코드임
+	// for(int i = 0; i < g; i++){
+	// 	for(int j =0; j<5;j++){
+	// 		SelectionSortPass(arr, lo+ i, hi, 5);
+	// 	}
+	// }
 
+	for (int j = lo; j < hi; j++)
+		SelectionSortPass(arr, j, hi, g);
+	
 	// 그룹단위 정렬 후 출력
 	PrintGroups(arr, lo, g);
 
 	// 가운데 몰려있는 그룹별 중간값들에 대해 재귀 호출
 	// Pair x = TODO
-
+	Pair x = Select(arr, lo + 2*g, lo + 3*g - 1, std::ceil(g/2.0));
 	// cout << "lo = " << lo << ", hi = " << hi << ", Median of medians = " << x.value << endl;
 
 	// 중간값들의 중간값을 피벗으로 사용
-	// swap(arr[x.index], arr[hi]);
+	swap(arr[x.index], arr[hi]);
 
 	int index = Partition(arr, lo, hi);
 
