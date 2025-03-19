@@ -6,6 +6,8 @@
 #include <chrono>
 #include <numeric>
 #include <iomanip>
+#include <algorithm>
+
 using namespace std;
 
 void Print(vector<int>& arr)
@@ -25,6 +27,10 @@ vector<int> CountingSort(const vector<int>& arr, int k)
 	vector<int> count(k + 1, 0); // 0이상 k이하니까 k + 1개를 0으로 초기화
 
 	// TODO:
+	for(int i=0;i<arr.size();i++) count[arr[i]]++;
+
+	for(int i=1;i<count.size();i++) count[i] += count[i-1];
+
 
 	cout << "Count: ";
 	Print(count);
@@ -35,6 +41,7 @@ vector<int> CountingSort(const vector<int>& arr, int k)
 	for (int i = output.size() - 1; i >= 0; i--)
 	{
 		// TODO:
+		output[--count[arr[i]]] = arr[i];
 
 		cout << "Count: ";
 		Print(count);
