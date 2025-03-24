@@ -6,6 +6,8 @@
 #include <chrono>
 #include <numeric>
 #include <iomanip>
+#include <algorithm>
+
 using namespace std;
 
 void Print(vector<float>& arr)
@@ -45,16 +47,25 @@ void BucketSort(vector<float>& arr, int num_buckets)
 	vector<vector<float>> buckets(num_buckets);
 
 	// TODO:
+	for(auto val : arr){ 
+		int idx = val*10;
+		buckets[idx].push_back(val);
+	}
 
 	cout << "Before sorting" << endl;
 	PrintBuckets(buckets);
 
 	// TODO:
+	for(int i = 0; i<num_buckets;i++) InsertionSort(buckets[i]);
 
 	cout << "After sorting" << endl;
 	PrintBuckets(buckets);
 
 	// TODO:
+	int idx = 0;
+	for(int i =0; i<num_buckets;i++){
+		for(int j=0;j<buckets[i].size();j++) arr[idx++] = buckets[i][j];
+	}
 }
 
 int main()
