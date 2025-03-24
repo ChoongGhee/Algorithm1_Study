@@ -47,8 +47,10 @@ void BucketSort(vector<float>& arr, int num_buckets)
 	vector<vector<float>> buckets(num_buckets);
 
 	// TODO:
+	// 아래 해당 문법은 val이라는 변수를 생성해서 작업을 하는것.
+	// But auto&의 경우 변수 val을 생성하는게 아니라 사실 arr[0] 그 값 그자체로 바로 작업하는 것임. < 이게 공간 속도 측면에서 나음.
 	for(auto val : arr){ 
-		int idx = val*10;
+		int idx = val*num_buckets;
 		buckets[idx].push_back(val);
 	}
 
