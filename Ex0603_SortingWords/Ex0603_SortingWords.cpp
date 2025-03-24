@@ -22,7 +22,7 @@ void CountingSort(vector<string>& arr, int k, int d)
 	vector<string> temp = arr; // 복사
 
 	std::fill(arr.begin(), arr.end(), "   "); // 디버깅 편의
-	
+
 	// TODO:
 	vector<int> count(k + 1, 0);
 
