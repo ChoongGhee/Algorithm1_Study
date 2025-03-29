@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <iomanip>
 #include <vector>
+#include <algorithm>
+#include <cmath>
 
 using namespace std;
 
@@ -64,10 +66,11 @@ public:
 	{
 		if (x == nullptr) return -1; // 편의상 못 찾았을 경우 -1 반환
 
-		// if (key < x->key) TODO:
-		// else if (key > x->key) TODO:
-		// else return x->val;
-		return -1; // TODO: 삭제
+		// TODO:
+		if (key < x->key) return Search(x->left, key);
+		else if (key > x->key) return Search(x->right, key);
+		else return x->val;
+		// return -1; // TODO: 삭제
 	}
 
 	// 이진트리 복습
@@ -76,10 +79,10 @@ public:
 	{
 		if (x == nullptr) return false;
 
-		// if (key < x->key) TODO:
-		// else if (key > x->key) TODO:
-		// else return true;
-		return false; // 삭제
+		if (key < x->key) return Contains(x->left, key);
+		else if (key > x->key) return Contains(x->right, key);
+		else return true;
+		// return false; // 삭제
 	}
 
 	// 키(key)가 가장 작은 노드 찾기 (이진트리 복습)
@@ -90,7 +93,10 @@ public:
 	Node* Min(Node* x)
 	{
 		// return TODO:
-		return nullptr; // 삭제
+		if(x->left == nullptr) return x;
+
+		return Min(x->left);
+		// return nullptr; // 삭제
 	}
 
 	// 키(key)가 가장 큰 노드 찾기 (이진트리 복습)
@@ -101,15 +107,20 @@ public:
 	Node* Max(Node* x)
 	{
 		// return TODO:
-		return nullptr; // 삭제
+		if(x->right == nullptr) return x;
+
+		return Max(x->right);
+		// return nullptr; // 삭제
 	}
 
 	// AVL과 비슷
 	Node* RotateLeft(Node* h)
 	{
 		Node* x = h->right; // 회전 후에 부모 자리로 올라갈 노드
-		// h->right = TODO
-		// x->left = TODO
+		// TODO
+		h->right = x->left;
+		x->left = h;
+
 		x->color = h->color;
 		h->color = Color::kRed; // 일단 레드로 설정 후 나중에 수정
 		x->size = h->size;
@@ -121,8 +132,9 @@ public:
 	Node* RotateRight(Node* h)
 	{
 		Node* x = h->left; // 회전 후에 부모 자리로 올라갈 노드
-		// h->left = TODO
-		// x->right = TODO
+		// TODO
+		h->left = x->right;
+		x->right = h;
 		x->color = h->color;
 		h->color = Color::kRed; // 일단 레드로 설정 후 나중에 수정
 		x->size = h->size;
@@ -155,13 +167,13 @@ public:
 		// 2. else-if가 아니라 if  
 
 		// 오른쪽이 레드이고 왼쪽은 레드가 아니면?
-		// if (TODO) h = TODO
+		if (IsRed(h->right) && !IsRed(h->left)) h = RotateLeft(h);
 
 		// 왼쪽과 왼쪽의 왼쪽이 둘 다 레드이면?
-		// if (TODO) h = TODO
+		if (IsRed(h->left) && IsRed(h->left->left)) h = RotateRight(h); 
 
 		// 왼쪽, 오른쪽이 둘 다 레드이면? 
-		// if (TODO) TODO
+		if(IsRed(h->right) && IsRed(h->left)) FlipColors(h);
 
 		h->size = Size(h->left) + Size(h->right) + 1;
 
@@ -201,16 +213,16 @@ public:
 		FlipColors(h);
 
 		// 오른쪽 자식의 왼쪽 자식이 레드라면 (오른쪽 자식이 3-노드라면)
-		//if (...)
-		//{
-		//	// 그 중에서 가장 작은 것을 h의 왼쪽으로 옮김 
-		//	// 삭제 후 남을 여분을 하나 가져오는 것
-		//	// 왼쪽을 3/4-노드로 만들어서 쉽게 삭제하기 위함 
-		//	TODO: 
-		//	TODO:
-		// 
-		//	FlipColors(h);
-		//}
+		if (IsRed(h->right->left))
+		{
+			// 그 중에서 가장 작은 것을 h의 왼쪽으로 옮김 
+			// 삭제 후 남을 여분을 하나 가져오는 것
+			// 왼쪽을 3/4-노드로 만들어서 쉽게 삭제하기 위함 
+			h->right = RotateRight(h->right);
+			h = RotateLeft(h);
+
+			FlipColors(h);
+		}
 
 		return h;
 	}
@@ -220,7 +232,15 @@ public:
 	{
 		cout << "MoveRedRight() " << h->key << endl;
 
+		FlipColors(h);
 		// TODO:
+		if (IsRed(h->left->left))
+		{
+
+			h = RotateRight(h);
+			
+			FlipColors(h);
+		}
 
 		return h;
 	}
@@ -234,7 +254,7 @@ public:
 		if (!IsRed(root->left) && !IsRed(root->right))
 			root->color = Color::kRed;
 
-		// Print2D(); // 필요하면 여기서도 출력해보세요.
+		Print2D(); // 필요하면 여기서도 출력해보세요.
 
 		root = DeleteMin(root);
 
@@ -248,21 +268,22 @@ public:
 		cout << "DeleteMin() " << h->key << endl;
 
 		// h가 가장 작은 노드라면 삭제하고 반환
-		//if ( TODO )
-		//{
-		//	cout << "Delete node " << h->key << endl;
-		//	delete h; // 자바에서는 가비지 컬렉터 사용
-		//	return nullptr;
-		//}
+		if(h->left == nullptr)
+		{
+			cout << "Delete node " << h->key << endl;
+			delete h; // 자바에서는 가비지 컬렉터 사용
+			return nullptr;
+		}
 
 		// 왼쪽자식이 블랙이고, 왼쪽-왼쪽 자식도 블랙이면
 		// 삭제하기 어렵기 때문에 MoveRedLeft()에서 3-노드로 변경
-		//if ( TODO )
-		//{
-		//	TODO:
-		// 
-		//	Print2D(h);
-		//}
+		if(!IsRed(h->left) && !IsRed(h->left->left))
+		{
+			// TODO:
+			h = MoveRedLeft(h);
+		
+			Print2D(h);
+		}
 
 		// 계속 찾아 내려감
 		h->left = DeleteMin(h->left);
@@ -274,11 +295,48 @@ public:
 	void DeleteMax()
 	{
 		// TODO:
+		assert(!IsEmpty());
+
+		// 루트가 가운데인 4-노드로 임시 변경
+		if (!IsRed(root->left) && !IsRed(root->right))
+			root->color = Color::kRed;
+
+		Print2D(); // 필요하면 여기서도 출력해보세요.
+
+		root = DeleteMax(root);
+
+		// 루트는 항상 블랙
+		if (!IsEmpty())
+			root->color = Color::kBlack;
 	}
 	Node* DeleteMax(Node* h)
 	{
 		// TODO:
-		return nullptr;
+		cout << "DeleteMax() " << h->key << endl;
+
+		// h가 가장 작은 노드라면 삭제하고 반환
+		if(h->right == nullptr)
+		{
+			cout << "Delete node " << h->key << endl;
+			delete h; // 자바에서는 가비지 컬렉터 사용
+			return nullptr;
+		}
+
+		// 왼쪽자식이 블랙이고, 왼쪽-왼쪽 자식도 블랙이면
+		// 삭제하기 어렵기 때문에 MoveRedLeft()에서 3-노드로 변경
+		if(!IsRed(h->right) && !IsRed(h->right->right))
+		{
+			// TODO:
+			h = MoveRedRight(h);
+		
+			Print2D(h);
+		}
+
+		// 계속 찾아 내려감
+		h->right = DeleteMax(h->right);
+
+		return Balance(h);
+		// return nullptr;
 	}
 
 	// 임의의 키(key)를 찾아서 삭제
@@ -297,45 +355,51 @@ public:
 
 	Node* Delete(Node* h, Key key)
 	{
-		//if ( TODO ) // 왼쪽으로 찾아 내려가서 지우는 경우
-		//{
-		//	// 힌트: DeleteMin()과 비슷함
+		if (key < h->key) // 왼쪽으로 찾아 내려가서 지우는 경우
+		{
+			// 힌트: DeleteMin()과 비슷함
 
-		//	if ( TODO )
-		//		h = TODO
+			if (!IsRed(h->left) && !IsRed(h->left->left)) 
+				h = MoveRedLeft(h);
 
-		//	h->left = TODO
-		//}
-		//else // 오른쪽으로 찾아 내려가거나 바로 삭제하는 경우
-		//{
-		//	// DeleteMax()와 비슷한 경우
-		//	if ( TODO )
-		//		h = TODO
+			h->left = Delete(h->left, key);
+		}
+		else // 오른쪽으로 찾아 내려가거나 바로 삭제하는 경우
+		{
+			// DeleteMax()와 비슷한 경우
+			if (IsRed(h->left))
+				h = RotateRight(h);
 
-		//	// 키가 일치하고 오른쪽 서브트리가 없으면 삭제
-		//	// 왼쪽 서브트리에 대한 처리는 바로 위의 RotateRight()에 해줬음
-		//	if ((TODO) && (TODO))
-		//	{
-		//		delete h; // 자바는 가비지 컬렉터 사용
-		//		return nullptr;
-		//	}
+			// 키가 일치하고 오른쪽 서브트리가 없으면 삭제
+			// 왼쪽 서브트리에 대한 처리는 바로 위의 RotateRight()에 해줬음
+			if ((h->key == key) && (h->right == nullptr))
+			{
+				delete h; // 자바는 가비지 컬렉터 사용
+				return nullptr;
+			}
 
-		//	if (!IsRed(h->right) && !IsRed(h->right->left))
-		//		h = MoveRedRight(h);
+			if (!IsRed(h->right) && !IsRed(h->right->left))
+				h = MoveRedRight(h);
 
-		//	// 삭제하는 경우
-		//	if (key == h->key)
-		//	{
-		//		// 오른쪽 서브트리에서 가장 작은 것을 h로 복사한 후에
-		//		// DeleteMin()으로 그것을 삭제
-		//      
-		//		// TODO: Min() 사용, 4줄 정도 됩니다.
-		//	}
-		//	else {
-		//		// 오른쪽으로 계속 찾아가기
-		//		h->right = Delete(h->right, key);
-		//	}
-		//}
+			// 삭제하는 경우
+			if (key == h->key)
+			{
+				
+				// 오른쪽 서브트리에서 가장 작은 것을 h로 복사한 후에
+				// DeleteMin()으로 그것을 삭제
+		     
+				// TODO: Min() 사용, 4줄 정도 됩니다.
+				Node* successor = Min(h->right);
+				h->key = successor->key;
+				h->val = successor->val;
+
+				h->right = DeleteMin(h->right);
+			}
+			else {
+				// 오른쪽으로 계속 찾아가기
+				h->right = Delete(h->right, key);
+			}
+		}
 
 		return Balance(h);
 	}
@@ -395,42 +459,42 @@ int main()
 		{
 			cout << "Insert: " << string(1, c) << endl;
 			bst.Insert(string(1, c), int(c));
-			//bst.Print2D();
+			// bst.Print2D();
 
 		}
 
-		//// Search 테스트
-		//for (char c : keys)
-		//{
-		//	cout << c << " " << int(c) << " " << bst.Search(string(1, c)) << endl;
-		//}
+		// Search 테스트
+		for (char c : keys)
+		{
+			cout << c << " " << int(c) << " " << bst.Search(string(1, c)) << endl;
+		}
 
 		bst.Print2D();
 
-		//for (char c : keys)
-		//{
-		//	cout << "Delete: " << string(1, c) << endl;
-		//	bst.Delete(string(1, c));
-		//	bst.Print2D();
+		for (char c : keys)
+		{
+			cout << "Delete: " << string(1, c) << endl;
+			bst.Delete(string(1, c));
+			bst.Print2D();
 
-		//}
-		//return 0;
+		}
+		return 0;
 
-		//while (!bst.IsEmpty())
-		//{
-		//	cout << "DeleteMin: " << bst.Min() << endl;
-		//	bst.DeleteMin();
-		//	bst.Print2D();
-		//}
-		//cout << endl;
+		while (!bst.IsEmpty())
+		{
+			cout << "DeleteMin: " << bst.Min() << endl;
+			bst.DeleteMin();
+			bst.Print2D();
+		}
+		cout << endl;
 
-		//while (!bst.IsEmpty())
-		//{
-		//	cout << "DeleteMax: " << bst.Max() << endl;
-		//	bst.DeleteMax();
-		//	bst.Print2D();
-		//}
-		//cout << endl;
+		while (!bst.IsEmpty())
+		{
+			cout << "DeleteMax: " << bst.Max() << endl;
+			bst.DeleteMax();
+			bst.Print2D();
+		}
+		cout << endl;
 	}
 
 	// ACEHLMPRSX 순서로 추가
