@@ -72,12 +72,19 @@ int main()
 			int birthday = dist(g);
 
 			// TODO:
+			if(map.find(birthday) == map.end()){
+				map.insert({birthday, 1});
+			}
+			else{
+				map[birthday]++;
+				samebirthday_count++;
+			}
 		}
 
 		if (samebirthday_count > 0)
 			all_samebirthday_count += 1;
 
-		//Print(map); // 디버깅용
+		// Print(map); // 디버깅용
 		//exit(0);
 
 		map.clear();
