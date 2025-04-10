@@ -23,6 +23,15 @@ int RomanToInt(string s)
 	for (int i = 0; i < s.length(); i++)
 	{
 		// TODO:
+		if(m[s[i]] < m[s[i+1]]){
+			ans += m[s[i+1]] - m[s[i]];
+			cout << i << " " << s[i] << " " << ans << " " << s[i] << " " << s[i+1] << endl;
+			i += 1;
+			continue;
+		}
+		else ans += m[s[i]];
+
+		cout << i << " " << s[i] << " " << ans << " " << s[i] << " " << s[i+1] << endl;
 	}
 
 	cout << s << " = " << ans << endl;
