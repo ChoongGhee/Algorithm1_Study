@@ -85,15 +85,26 @@ public:
 	{
 		vector<int> indegree(vertices.size()); // indegree를 Vertex에 저장할 수도 있습니다.
 		// TODO:
+		for(auto* v : vertices) indegree[v->value] = v->in_neighbors.size();
 
 		queue<Vertex*> q;
 
 		// indegree가 0인 vertex들을 q에 넣기
 		// TODO:
+		for(auto* v : vertices) if(!v->in_neighbors.size()) q.push(v);
 
 		vector<Vertex*> result;
 
 		// TODO:
+		while(!q.empty()){
+			Vertex* cur = q.front();
+			
+			for(auto* v : cur->out_neighbors) if(--indegree[v->value] == 0) q.push(v);
+			
+			result.push_back(cur);
+			q.pop();
+			
+		}
 
 		// 뒤에서 DFS 방식 예제와의 호환성을 위해 역순으로 stack에 저장
 		stack<Vertex*> s;
