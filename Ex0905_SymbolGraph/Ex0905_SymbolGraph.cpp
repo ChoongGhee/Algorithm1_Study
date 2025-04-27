@@ -29,6 +29,14 @@ public:
 		vertices.reserve(keys.size());
 
 		// TODO: vertices와 table 초기화
+		// for(int i = 0; i < keys.size(); i++)
+		// 	vertices[i] = new Vertex(keys[i], i);
+		// 실수 벡터 공간에 여유를 둔거고 원소가 추가된 것은 아니였음.
+		for(int i = 0; i < keys.size(); i++) {
+			Vertex* v = new Vertex(keys[i], i);
+			vertices.push_back(v);  // 벡터에 추가
+			table[keys[i]] = i;     // 해시맵에 추가
+		}
 
 		// 확인용
 		for (auto v : vertices)
@@ -46,6 +54,7 @@ public:
 	void AddDiEdge(string kv, string kw)
 	{
 		// TODO: table 이용
+		AddDiEdge(table[kv], table[kw]);
 	}
 
 	void AddDiEdge(int v, int w) // 단방향 간선
@@ -56,6 +65,7 @@ public:
 	void DFS(string k)
 	{
 		// TODO: table 이용
+		DFS(table[k]);
 	}
 
 	void DFS(int source)
