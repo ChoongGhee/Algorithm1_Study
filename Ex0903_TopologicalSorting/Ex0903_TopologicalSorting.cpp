@@ -81,7 +81,10 @@ public:
 		post = queue<Vertex*>(); // 비교 용도
 		revPost = stack<Vertex*>();
 
-		// TODO: 
+		// TODO:
+		// 두 코드가 같은 결과를 내는 이유 : revPost가 핵심임. 후위순회를 하기 때문에 ( 진출차수가 없는 곳 ) = dfs함수가 처음으로 stack에 push되는 곳 
+		for(auto* v : vertices) if(!v->visited) TopologicalSortHelper(v);
+		// for(auto* v : vertices) if(!v->in_neighbors.size()) TopologicalSortHelper(v);
 
 		return revPost;
 	}
@@ -92,6 +95,11 @@ private:
 	void TopologicalSortHelper(Vertex* v)
 	{
 		//TODO: pre, post, revPost에 저장하기 
+		pre.push(v);
+		v->visited = true;
+		for(auto* ver : v->out_neighbors) if(!ver->visited) TopologicalSortHelper(ver);
+		post.push(v);
+		revPost.push(v);
 	}
 };
 
