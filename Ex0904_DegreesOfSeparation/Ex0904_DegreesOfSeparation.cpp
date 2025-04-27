@@ -76,6 +76,7 @@ public:
 					q.push(w);
 
 					// prev[TODO] = TODO
+					prev[w->value] = v;
 				}
 			}
 		}
@@ -84,6 +85,16 @@ public:
 
 		// TODO: prev를 이용해서 path 만들기
 		//       deque의 push_front() 사용
+
+		// 실수 : prev배열을 잘 활용할 생각을 못함. 모든 경우를 생각하지 못함. 안될 가능성도 있는데 그것을 간과함.
+		if(prev[sink]) path.push_front(vertices[sink]);
+		else cout << "No path found" << endl;
+
+		Vertex* cur = prev[sink];
+		while (cur != nullptr) {
+			path.push_front(cur);
+			cur = prev[cur->value];
+		}
 
 
 		// 결과 출력 (숫자만)
