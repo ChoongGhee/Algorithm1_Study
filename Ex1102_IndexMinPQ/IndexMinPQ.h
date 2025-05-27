@@ -40,8 +40,8 @@ public:
 		assert(!Contains(i));
 
 		size += 1;
-		qp[i] = size;
-		pq[size] = i;
+		qp[i] = size; 
+		pq[size] = i; 
 		keys[i] = key;
 		Swim(size); // pq[size]를 자기 위치로 올려보냄
 
@@ -50,7 +50,7 @@ public:
 
 	int MinIndex()
 	{
-		return pq[1]; // 1번 인덱스 자리
+		return pq[1]; // 1번 인덱스 자리 
 	}
 
 	Key MinKey()
@@ -130,9 +130,9 @@ public:
 	void Exch(int i, int j)
 	{
 		int swap = pq[i];
-		pq[i] = pq[j];
+		pq[i] = pq[j]; 
 		pq[j] = swap;
-		qp[pq[i]] = i;
+		qp[pq[i]] = i; 
 		qp[pq[j]] = j;
 	}
 
@@ -145,12 +145,25 @@ public:
 	{
 		// TODO: 우선순위가 높은 것을 수영해서 수면위로 올라가듯 위로 올리는 과정
 		// 힌트: Greater(), Exch() 사용
+		    while (k > 1 && Greater(k / 2, k))
+			{
+				Exch(k, k / 2);
+				k = k / 2;
+			}
 	}
 
 	void Sink(int k)
 	{
 		// TODO: 우선순위가 낮은 것을 밑으로 가라앉히는 과정
 		// 힌트: Greater(), Exch() 사용
+		while (2 * k <= size)
+		{
+			int j = 2 * k;
+			if (j < size && Greater(j, j + 1)) j++;
+			if (!Greater(k, j)) break;
+			Exch(k, j);
+			k = j;
+		}
 	}
 
 	void Print()
