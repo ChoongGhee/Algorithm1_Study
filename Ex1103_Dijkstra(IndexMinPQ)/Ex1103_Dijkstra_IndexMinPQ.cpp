@@ -87,25 +87,30 @@ public:
 		cout << v << endl;
 
 		// 인접 edge들 중에서 가장 가까운 것을 이용해서 업데이트
-/*
-		for ( TODO )
+
+		for ( DirectedEdge& vec : g.Adj(v) )
 		{
 			// dist[v]: s에서 v까지 오기 위해 현재까지 발견된 최소거리 경로
 			// v에서 다시 w로 이동할 경우 dist 업데이트
 
-			int w = TODO;
+			int w = vec.w;
 
-			double new_dist = TODO;
-			if ( TODO ) // w까지 오는 새로운 최단 경로 발견
+			double new_dist = dist[v] + vec.weight;
+			if ( new_dist < dist[w] ) // w까지 오는 새로운 최단 경로 발견
 			{
-				dist[w] = TODO;
+				dist[w] = new_dist;
 
-				prev[w] = TODO; // 최단 경로 기록
+				prev[w] = v; // 최단 경로 기록
 
 				//TODO: pq 사용
+				if (pq.Contains(w)) {
+					pq.DecreaseKey(w, dist[w]);
+				} else {
+					pq.Insert(w, dist[w]);
+				}
 			}
 		}
-*/
+
 		PrintDist(dist);
 	}
 
@@ -128,6 +133,26 @@ public:
 	void PrintPaths()
 	{
 		// TODO: prev 이용
+
+		for (int i = 0; i < prev.size(); i++)
+		{
+			deque<int> path;
+			path.push_front(i);
+			int v = prev[i];
+			while (v != -1)
+			{
+				path.push_front(v);
+				v = prev[v];
+			}
+
+
+			for (auto v : path) {
+				cout << v;
+				if (v != path.back())
+					cout << " -> ";
+			}
+			cout << endl;
+		}
 	}
 
 private:
