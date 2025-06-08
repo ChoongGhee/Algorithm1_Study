@@ -91,6 +91,19 @@ public:
 	void Relax(EdgeWeightedDigraph& g, int v)
 	{
 		// TODO:
+		for(auto ver : g.Adj(v)){
+			double new_dist = dist[v] + ver.weight;
+			if(new_dist < dist[ver.w]) {
+				dist[ver.w] = new_dist;
+				prev[ver.w] = v;
+				
+				// 방문하지 않은 정점만 priority queue에 추가
+				if(!visited[ver.w]) {
+					pq.push(pair<double, int>{dist[ver.w], ver.w});
+				}
+			}
+		}
+		PrintDist(dist);
 	}
 
 	void PrintIndex(vector<double>& dist)
@@ -112,6 +125,25 @@ public:
 	void PrintPaths()
 	{
 		// TODO: prev 이용
+				for(int i = 0; i<dist.size();i++){
+			deque<int> path;
+			path.push_front(i);
+			int v = prev[i];
+			while (v != -1)
+			{
+				path.push_front(v);
+				v = prev[v];
+			}
+
+
+			for (auto v : path) {
+				cout << v;
+				if (v != path.back())
+					cout << " -> ";
+			}
+			cout << endl;
+
+		}
 	}
 
 private:
