@@ -17,6 +17,9 @@ int RecurFibonacci(int n)
 int MemoizedTopDownFibonacciHelper(int n, std::vector<int>& memo)
 {
 	// TODO:
+	if(memo[n] != -1) return memo[n];
+	
+	memo[n] = MemoizedTopDownFibonacciHelper(n-1, memo) + MemoizedTopDownFibonacciHelper(n-2, memo);
 
 	for (auto& t : memo) cout << setw(4) << t; cout << endl;
 
@@ -42,9 +45,10 @@ int BottomUpFibonacciTabulation(int n)
 	table[1] = 1;
 
 	// for ( TODO )
+	for(int i = 2; i<=n;i++)
 	{
 		// TODO:
-
+		table[i] = table[i-1] + table[i-2]; 
 		for (auto& t : table) cout << setw(4) << t; cout << endl;
 	}
 
@@ -61,6 +65,11 @@ int BottomUpFibonacci(int n)
 	int b = 1;
 
 	// TODO:
+	for(int i = 0; i < n-1;i++){
+		int temp = b;
+		b += a;
+		a = temp;
+	}
 
 	return b; // The N-th Fibonacci number
 }
