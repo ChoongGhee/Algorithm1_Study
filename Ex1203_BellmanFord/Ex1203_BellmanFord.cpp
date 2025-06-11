@@ -4,6 +4,7 @@
 #include <queue>
 #include <limits>
 #include <iomanip>
+#include <algorithm>
 using namespace std;
 
 void Print(vector<double>& dist)
@@ -16,6 +17,23 @@ void Print(vector<double>& dist)
 void PrintPathHelper(vector<int>& prev, int j)
 {
 	// TODO:
+	
+	deque<int> path;
+	path.push_front(j);
+	int v = prev[j];
+	while (v != -1)
+	{
+		path.push_front(v);
+		v = prev[v];
+	}
+
+
+	for (auto v : path) {
+		cout << v;
+		if (v != path.back())
+			cout << " -> ";
+	}
+		
 }
 
 void PrintPaths(vector<int>& prev)
@@ -63,22 +81,22 @@ int main()
 	};
 	int V = 5; // number of vertices
 
-	//std::reverse(edges.begin(), edges.end()); // 간선 순서 뒤집어서 해보기
+	// std::reverse(edges.begin(), edges.end()); // 간선 순서 뒤집어서 해보기
 
 	// 간선 순서는 CLRS p613 예시 순서
-	//vector<Edge> edges = {
-	//	{1, 2, 5.0},
-	//	{1, 3, 8.0},
-	//	{1, 4, -4.0},
-	//	{2, 1, -2.0},
-	//	{3, 2, -3.0},
-	//	{3, 4, 9.0},
-	//	{4, 2, 7.0},
-	//	{4, 0, 2.0},
-	//	{0, 1, 6.0},
-	//	{0, 3, 7.0},
-	//};
-	//int V = 5; // number of vertices
+	// vector<Edge> edges = {
+	// 	{1, 2, 5.0},
+	// 	{1, 3, 8.0},
+	// 	{1, 4, -4.0},
+	// 	{2, 1, -2.0},
+	// 	{3, 2, -3.0},
+	// 	{3, 4, 9.0},
+	// 	{4, 2, 7.0},
+	// 	{4, 0, 2.0},
+	// 	{0, 1, 6.0},
+	// 	{0, 3, 7.0},
+	// };
+	// int V = 5; // number of vertices
 
 	int E = int(edges.size()); // number of edges
 
@@ -95,6 +113,12 @@ int main()
 		for (auto e : edges)
 		{
 			// TODO:
+			if(dist[e.v] != kInf && dist[e.w] > dist[e.v] + e.weight) {
+				dist[e.w] = dist[e.v] + e.weight;
+				prev[e.w] = e.v;
+			}
+
+
 		}
 
 		Print(dist);
@@ -109,6 +133,7 @@ int main()
 	for (auto e : edges)
 	{
 		// if ( TODO )
+		if(dist[e.v] != kInf && dist[e.w] > dist[e.v] + e.weight)
 		{
 			cout << "Negative cycle was found." << endl;
 			return -1;
